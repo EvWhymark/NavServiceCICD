@@ -71,6 +71,8 @@ public class NavigationServiceImpl implements Navigation_svc {
     private static final String ENDPOINT_OPENSKY = "https://opensky-network.org/api";
     private static final String ENDPOINT_OPENSKY_AUTH = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
 
+    private static final String OVERPASS_URL = "https://overpass-api.de/api/interpreter";
+
     private static final ObjectMapper OBJ_MAPPER = new ObjectMapper(); // Maps StateVectors from API to a List
     private final RestTemplate _restTemplate = new RestTemplate();
     private final Logger _logger = LoggerFactory.getLogger(NavigationServiceImpl.class);
@@ -128,6 +130,10 @@ public class NavigationServiceImpl implements Navigation_svc {
         }
     }
 
+    private String fetchOverpassData(String overpassQuery) {
+        return "";
+    }
+
 
     private StateVector[] parseRawVectors(String rawJson) {
         try {
@@ -143,6 +149,11 @@ public class NavigationServiceImpl implements Navigation_svc {
         }
     }
 
+    @Override
+    public String getNearbyRestaurants(double lat, double lon) {
+   
+        return "";
+    }
 
     @Override
     public StateVector[] getStateVectors(float lamin, float lomin, float lamax, float lomax) {

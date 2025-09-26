@@ -15,6 +15,7 @@ public interface Navigation_svc {
 	Airport getAirportFromICAO(String icaoCode);
 	FIXX getFIXXFromId(String fixxId);
 	String computeNavlog(String route, String aircraft, String cruiseALT, String TAS);
+	String getNearbyRestaurants(double lat, double lon);
 
 	StateVector[] getStateVectors(float lamin, float lomin, float lamax, float lomax);
 	StateVector[] getStateVectorsUS();
