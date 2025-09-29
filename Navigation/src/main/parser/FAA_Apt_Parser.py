@@ -6,11 +6,13 @@ SERVICE_TAGS = {
     "SURV", "SLF_SVC", "SLF_SVC_24", "TOW"
 }
 
+
 def format_airport_name(name):
     """Convert airport name to title case, preserving single-letter abbreviations."""
     parts = name.split()
     formatted_parts = [p if len(p) == 1 else p.capitalize() for p in parts]
     return " ".join(formatted_parts)
+
 
 def filter_services(service_str):
     """Keep only the allowed tags from OTHER_SERVICES."""
@@ -20,6 +22,7 @@ def filter_services(service_str):
     tags = [s.split('=')[0].strip() for s in service_str.split(',')]
     filtered = [t for t in tags if t in SERVICE_TAGS]
     return ", ".join(filtered)
+
 
 def parse_csv(input_file="APT_BASE.csv", airports1_file="airports1.csv"):
     keep_columns = [
@@ -79,5 +82,9 @@ def parse_csv(input_file="APT_BASE.csv", airports1_file="airports1.csv"):
 
     print(f"Filtered CSV written to: {output_file}")
 
+
 if __name__ == "__main__":
-    parse_csv()
+    try:
+        parse_csv()
+    except FileNotFoundError:
+        print("CSV file not found (either APT_BASE.csv or airports1.csv")
