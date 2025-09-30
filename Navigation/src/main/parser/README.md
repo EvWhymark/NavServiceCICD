@@ -13,7 +13,11 @@ Just run the python code however you want (terminal/IDE).
 When you run the program it will query you for a date to be used
 with the file name. The format for this is month-year. For example
 09-2025 for september 2025. This date should correspond to when you
-got the data set from the FAA dataset.
+got the data set from the FAA dataset. In the Cypher query below I
+am using the 09-2025 dataset as an example. This line:  
+LOAD CSV WITH HEADERS FROM 'file:///APT_BASE_09-2025.csv' AS row  
+will need to be modified accordingly to what you set the file name to.
+
 
 
 ## Cypher Query
@@ -45,7 +49,6 @@ CREATE (a:Airport {
     trns_strg_tie_flag: CASE WHEN row.TRNS_STRG_TIE_FLAG = '' THEN null ELSE toBoolean(row.TRNS_STRG_TIE_FLAG) END,
     other_services: row.OTHER_SERVICES,
     icao: row.ICAO_ID,
-    user_fee_flag: CASE WHEN row.USER_FEE_FLAG = '' THEN null ELSE toBoolean(row.USER_FEE_FLAG) END,
     name: row.ARPT_NAME,
     dist_city_to_airport: CASE WHEN row.DIST_CITY_TO_AIRPORT = '' THEN null ELSE toInteger(row.DIST_CITY_TO_AIRPORT) END,
     longitude: CASE WHEN row.LONG_DECIMAL = '' THEN null ELSE toFloat(row.LONG_DECIMAL) END,
@@ -81,7 +84,6 @@ https://www.faa.gov/documentLibrary/media/Advisory_Circular/arp-aas-amr-data-dic
 | trns_strg_tie_flag       | If tie down storage type is available (Either Yes or No)                                              |
 | other_services           | A variety of other services available at the airport. See other services section                      |
 | icao                     | Airport ICAO code                                                                                     |
-| user_fee_flag            | This one is kinda confusing but it seems like you can pay for your international arrival/ custom fees |
 | name                     | Full airport name                                                                                     |
 | dist_city_to_airport     | Distance from city to airport (In miles)                                                              |
 | longitude                | Longitude (8 decimal points)                                                                          |

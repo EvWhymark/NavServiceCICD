@@ -25,18 +25,13 @@ def filter_services(service_str):
 
 
 def parse_csv(input_file="APT_BASE.csv", airports1_file="airports1.csv"):
-    keep_columns = [
-        "ARPT_ID", "ELEV", "TPA", "DIST_CITY", "PHONE_NO",
-        "FUEL_TYPES", "AIRFRAME_REPAIR_SER_CODE", "PWR_PLANT_REPAIR_SER",
-        "BOTTLED_OXY_TYPE", "BULK_OXY_TYPE", "LGT_SKED", "BCN_LGT_SKED",
-        "TWR_TYPE_CODE", "BCN_LENS_COLOR", "LNDG_FEE_FLAG",
-        "TRNS_STRG_BUOY_FLAG", "TRNS_STRG_HGR_FLAG", "TRNS_STRG_TIE_FLAG",
-        "OTHER_SERVICES", "ICAO_ID", "USER_FEE_FLAG", "ARPT_NAME",
-        "DIST_CITY_TO_AIRPORT", "LONG_DECIMAL", "LAT_DECIMAL",
-    ]
+    keep_columns = ["ARPT_ID", "ELEV", "TPA", "DIST_CITY", "PHONE_NO", "FUEL_TYPES", "AIRFRAME_REPAIR_SER_CODE",
+                    "PWR_PLANT_REPAIR_SER", "BOTTLED_OXY_TYPE", "BULK_OXY_TYPE", "LGT_SKED", "BCN_LGT_SKED",
+                    "TWR_TYPE_CODE", "BCN_LENS_COLOR", "LNDG_FEE_FLAG", "TRNS_STRG_BUOY_FLAG", "TRNS_STRG_HGR_FLAG",
+                    "TRNS_STRG_TIE_FLAG", "OTHER_SERVICES", "ICAO_ID", "ARPT_NAME", "DIST_CITY_TO_AIRPORT",
+                    "LONG_DECIMAL", "LAT_DECIMAL", "IAP_EXISTS"]
 
     # Add new column for IAP_EXISTS
-    keep_columns.append("IAP_EXISTS")
 
     # Load airports1.csv into a dictionary mapping ident -> value (1 or 0)
     iap_lookup = {}
@@ -74,6 +69,18 @@ def parse_csv(input_file="APT_BASE.csv", airports1_file="airports1.csv"):
                 # Filter OTHER_SERVICES
                 if "OTHER_SERVICES" in filtered_row:
                     filtered_row["OTHER_SERVICES"] = filter_services(filtered_row["OTHER_SERVICES"])
+
+                for flag_col in ["LNDG_FEE_FLAG", "TRNS_STRG_BUOY_FLAG", "TRNS_STRG_HGR_FLAG",
+                                 "TRNS_STRG_TIE_FLAG"]:
+                    val = filtered_row.get(flag_col, "").strip()
+                    if val == "Y":
+                        filtered_row[flag_col] = True
+                    elif val == "N":
+                        filtered_row[flag_col] = False
+                    elif val == "":
+                        filtered_row[flag_col] = ""  # keep empty as-is
+                    else:
+                        filtered_row[flag_col] = val  # unexpected values stay unchanged
 
                 # Add IAP_EXISTS from airports1.csv if it exists, else null
                 filtered_row["IAP_EXISTS"] = iap_lookup.get(row["ARPT_ID"].strip().upper(), "null")
