@@ -61,7 +61,7 @@ def parse_csv(input_file="APT_BASE.csv", airports1_file="airports1.csv"):
             writer.writeheader()
 
             for row in reader:
-                # Skip row if ARPT_STATUS is not "O"
+                # Skip airports that are closed/abandoned
                 if "ARPT_STATUS" in row and row["ARPT_STATUS"].strip().upper() != "O":
                     continue
 

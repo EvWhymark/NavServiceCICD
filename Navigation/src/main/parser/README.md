@@ -16,8 +16,6 @@ with the file name. The format for this is month-year. For example
 got the data set from the FAA dataset.
 
 
-
-
 ## Cypher Query
 
 ```
@@ -55,6 +53,7 @@ CREATE (a:Airport {
     iapExists: CASE WHEN row.IAP_EXISTS = '' THEN null ELSE toInteger(row.IAP_EXISTS) END
 });
 ```
+
 ## Dictionary
 The values names are not necessarily self-explanatory. I will
 list what all the values stand for in the database. If any value is null
@@ -93,8 +92,8 @@ https://www.faa.gov/documentLibrary/media/Advisory_Circular/arp-aas-amr-data-dic
 ## Other Services
 Other services is a vague tag that the FAA assigns. This can relate to a
 bunch of different tags for airports. In the parser we are removing
-some unnecessary tags. Here are the list of the current tags we support 
-and what they mean:
+some unnecessary tags. These tags will be listed in the other services key in the response.
+Here are the list of the current tags we support and what they mean:
 
 AVNCS = Avionics  
 GLD = Glider  
