@@ -43,9 +43,6 @@ public class Airport {
 	@Property("tpa")
 	private Integer tpa;
 
-	@Property("dist_city")
-	private String distCity;
-
 	@Property("phone_no")
 	private String phoneNo;
 
@@ -91,9 +88,6 @@ public class Airport {
 	@Property("other_services")
 	private String otherServices;
 
-	@Property("user_fee_flag")
-	private Boolean userFeeFlag;
-
 	@Property("dist_city_to_airport")
 	private Integer distCityToAirport;
 
@@ -114,7 +108,6 @@ public class Airport {
 				", iapExists=" + iapExists +
 				", elev=" + elev +
 				", tpa=" + tpa +
-				", distCity='" + distCity + '\'' +
 				", phoneNo='" + phoneNo + '\'' +
 				", fuelTypes='" + fuelTypes + '\'' +
 				", airframeRepairSerCode='" + airframeRepairSerCode + '\'' +
@@ -130,7 +123,6 @@ public class Airport {
 				", trnsStrgHgrFlag=" + trnsStrgHgrFlag +
 				", trnsStrgTieFlag=" + trnsStrgTieFlag +
 				", otherServices='" + otherServices + '\'' +
-				", userFeeFlag=" + userFeeFlag +
 				", distCityToAirport=" + distCityToAirport +
 				'}';
 	}
