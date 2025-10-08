@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class WindAloft {
     private int direction;
     private int speed;
