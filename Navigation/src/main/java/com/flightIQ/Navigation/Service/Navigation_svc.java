@@ -8,6 +8,7 @@ import com.flightIQ.Navigation.DTO.RouteNode;
 import com.flightIQ.Navigation.DTO.StateVector;
 import com.flightIQ.Navigation.Models.Airport;
 import com.flightIQ.Navigation.Models.FIXX;
+import com.flightIQ.Navigation.Models.Restaurant;
 
 public interface Navigation_svc {
 	String GetATISOFDestination(String X_coord, String Y_coord, String DestAirportCode);
@@ -15,7 +16,7 @@ public interface Navigation_svc {
 	Airport getAirportFromICAO(String icaoCode);
 	FIXX getFIXXFromId(String fixxId);
 	String computeNavlog(String route, String aircraft, String cruiseALT, String TAS);
-	String getNearbyRestaurants(double lat, double lon);
+	List<Restaurant> getNearbyRestaurants(String icao, Double lat, Double lon);
 
 	StateVector[] getStateVectors(float lamin, float lomin, float lamax, float lomax);
 	StateVector[] getStateVectorsUS();

@@ -21,11 +21,14 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import com.flightIQ.Navigation.Models.Airport;
 import com.flightIQ.Navigation.Models.FIXX;
+import com.flightIQ.Navigation.Models.Restaurant;
 import com.flightIQ.Navigation.Models.WindsAloftClient;
 import com.flightIQ.Navigation.Repository.AirportRepository;
 import com.flightIQ.Navigation.Repository.FIXXRepository;
@@ -87,6 +90,8 @@ public class NavigationServiceImpl implements Navigation_svc {
 
     private AccessToken openskyToken;
 
+    @Value("${geoapify-secret}")
+    private String geoApifySecret;
 
     public NavigationServiceImpl(WindsAloftClient windsAloftClient) {
         this.Windclient = windsAloftClient;
@@ -130,8 +135,36 @@ public class NavigationServiceImpl implements Navigation_svc {
         }
     }
 
-    private String fetchOverpassData(String overpassQuery) {
-        return "";
+    private String fetchGeoapifyPlaces(double lat, double lon) {
+        
+        String categories = "catering";
+        int radius = 1609; // default radius in meters (adjustable)
+
+        String url = String.format(
+            "https://api.geoapify.com/v2/places?categories=%s&filter=circle:%.6f,%.6f,%d&bias=proximity:%.6f,%.6f&apiKey=%s",
+            categories, lon, lat, radius, lon, lat, geoApifySecret
+        );
+
+       
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+
+        ResponseEntity<String> response = _restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        // Return JSON body or handle error
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Geoapify API request failed: " + response.getStatusCode());
+        }
     }
 
 
@@ -150,9 +183,37 @@ public class NavigationServiceImpl implements Navigation_svc {
     }
 
     @Override
-    public String getNearbyRestaurants(double lat, double lon) {
-   
-        return "";
+    public List<Restaurant> getNearbyRestaurants(String icao, Double lat, Double lon) {
+
+        if (lat == null || lon == null) {
+            throw new IllegalArgumentException("Either ICAO or lat/lon must be provided.");
+        }
+
+
+        String jsonResponse = fetchGeoapifyPlaces(lat, lon);
+        JSONObject json = new JSONObject(jsonResponse);
+        JSONArray features = json.getJSONArray("features");
+
+        List<Restaurant> restaurants = new ArrayList<>();
+
+       
+        for (int i = 0; i < features.length(); i++) {
+            JSONObject feature = features.getJSONObject(i);
+            JSONObject props = feature.getJSONObject("properties");
+
+            if (props.has("name")) {
+                String name = props.getString("name");
+                JSONObject geometry = feature.getJSONObject("geometry");
+                JSONArray coords = geometry.getJSONArray("coordinates");
+
+                double lonVal = coords.getDouble(0);
+                double latVal = coords.getDouble(1);
+
+                restaurants.add(new Restaurant(name, latVal, lonVal));
+            }
+        }
+
+        return restaurants;
     }
 
     @Override

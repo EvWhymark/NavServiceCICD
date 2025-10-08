@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.flightIQ.Navigation.DTO.RouteNode;
 import com.flightIQ.Navigation.Exceptions.AirportNotFoundException;
 import com.flightIQ.Navigation.Models.Airport;
+import com.flightIQ.Navigation.Models.Restaurant;
 import com.flightIQ.Navigation.Service.Navigation_svc;
 import com.flightIQ.Navigation.Exceptions.BadRequestException;
 
@@ -75,4 +76,15 @@ public class NavigationServiceController {
     public ResponseEntity<String> computeNavlog(@RequestParam String route, @RequestParam String aircraft, @RequestParam String CruiseALT, @RequestParam String TAS) {
        return ResponseEntity.ok(navservice.computeNavlog(route, aircraft, CruiseALT, TAS));
     }
+    
+    @GetMapping(value="/restaurants")
+    public ResponseEntity<List<Restaurant>> getNearbyRestaurants(
+            @RequestParam(required = false) String icao,
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lon) {
+
+        return ResponseEntity.ok(navservice.getNearbyRestaurants(icao, lat, lon));
+    }
+
+
 }
