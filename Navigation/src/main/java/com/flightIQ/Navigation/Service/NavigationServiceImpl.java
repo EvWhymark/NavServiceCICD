@@ -74,7 +74,6 @@ public class NavigationServiceImpl implements Navigation_svc {
     private static final String ENDPOINT_OPENSKY = "https://opensky-network.org/api";
     private static final String ENDPOINT_OPENSKY_AUTH = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
 
-    private static final String OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 
     private static final ObjectMapper OBJ_MAPPER = new ObjectMapper(); // Maps StateVectors from API to a List
     private final RestTemplate _restTemplate = new RestTemplate();
@@ -135,47 +134,6 @@ public class NavigationServiceImpl implements Navigation_svc {
         }
     }
 
-    private double[] fetchAirportCoordinatesFromOverpass(String icao) {
-        String query = String.format("""
-            [out:json][timeout:25];
-            (
-            node["aeroway"="aerodrome"]["icao"="%s"];
-            way["aeroway"="aerodrome"]["icao"="%s"];
-            relation["aeroway"="aerodrome"]["icao"="%s"];
-            );
-            out center;
-        """, icao, icao, icao);
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("data", query);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = _restTemplate.exchange(OVERPASS_URL, HttpMethod.POST, request, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            JSONObject json = new JSONObject(response.getBody());
-            JSONArray elements = json.getJSONArray("elements");
-
-            if (elements.length() > 0) {
-                JSONObject first = elements.getJSONObject(0);
-
-                if (first.has("lat") && first.has("lon")) {
-                    return new double[]{first.getDouble("lat"), first.getDouble("lon")};
-                } else if (first.has("center")) {
-                    JSONObject center = first.getJSONObject("center");
-                    return new double[]{center.getDouble("lat"), center.getDouble("lon")};
-                }
-            }
-        }
-
-        return null;
-    }
-
-
 
     private String fetchGeoapifyPlaces(double lat, double lon) {
         
@@ -225,20 +183,23 @@ public class NavigationServiceImpl implements Navigation_svc {
     }
 
     @Override
-    public List<Restaurant> getNearbyRestaurants(String icao, Double lat, Double lon) {
-        // Step 1: Get coordinates from Overpass if ICAO is provided
-        if (icao != null && !icao.isEmpty()) {
-            double[] coords = fetchAirportCoordinatesFromOverpass(icao.toUpperCase());
-            if (coords == null) {
-                throw new RuntimeException("No coordinates found for ICAO: " + icao);
-            }
-            lat = coords[0];
-            lon = coords[1];
+    public List<Restaurant> getNearbyRestaurants(String icaoCode, String identCode, Double lat, Double lon) {
+        Airport airport = null;
+
+        if (icaoCode != null && !icaoCode.isEmpty()) {
+            airport = getAirportFromICAO(icaoCode.toUpperCase());
+        } else if (identCode != null && !identCode.isEmpty()) {
+            airport = getAirportFromIDENT(identCode.toUpperCase());
+        }
+
+        if (airport != null) {
+            lat = airport.getLatitude();
+            lon = airport.getLongitude();
         }
 
   
         if (lat == null || lon == null) {
-            throw new IllegalArgumentException("Either ICAO or lat/lon must be provided.");
+            throw new IllegalArgumentException("Either ICAO, identCode, or lat/lon must be provided.");
         }
 
 

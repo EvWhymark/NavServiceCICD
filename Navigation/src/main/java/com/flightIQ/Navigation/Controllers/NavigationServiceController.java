@@ -79,11 +79,12 @@ public class NavigationServiceController {
     
     @GetMapping(value="/restaurants")
     public ResponseEntity<List<Restaurant>> getNearbyRestaurants(
-            @RequestParam(required = false) String icao,
+            @RequestParam(required = false) String icaoCode,
+            @RequestParam(required = false) String identCode,
             @RequestParam(required = false) Double lat,
             @RequestParam(required = false) Double lon) {
 
-        return ResponseEntity.ok(navservice.getNearbyRestaurants(icao, lat, lon));
+        return ResponseEntity.ok(navservice.getNearbyRestaurants(icaoCode, identCode, lat, lon));
     }
 
 
