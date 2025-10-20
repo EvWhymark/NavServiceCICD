@@ -72,6 +72,7 @@ jobs:
 
       - name: 'Build with Maven'
         run: mvn clean package -DskipTests
+        working-directory: ./Navigation
 
       # Configure Workload Identity Federation and generate an access token.
       #
