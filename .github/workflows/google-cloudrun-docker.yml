@@ -39,7 +39,13 @@ on:
   push:
     branches:
       - '"main"'
-
+  #For Testing
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment (staging or prod)'
+        required: true
+        default: 'staging'
 env:
   PROJECT_ID: 'my-project' # TODO: update to your Google Cloud project ID
   REGION: 'us-central1' # TODO: update to your region
