@@ -33,7 +33,7 @@
 # Image -> Google Cloud (Utilize github secrets)
 
 #UPDATE .env -> .secrets on merge
-
+#UPDATE Assertion in service provider
 
 name: 'Build and Deploy to Cloud Run'
 
@@ -48,11 +48,11 @@ on:
         description: 'Deployment environment (staging or prod)'
         required: true
         default: 'staging'
-env:
-  PROJECT_ID: 'flightiq-475420'
-  REGION: 'us-east4'
-  SERVICE: 'my-service'
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/941378787241/locations/global/workloadIdentityPools/github/providers/my-repo'
+#env:
+#  PROJECT_ID: 'flightiq-475420'
+#  REGION: 'us-east4'
+#  SERVICE: 'my-service'
+#  WORKLOAD_IDENTITY_PROVIDER: 'projects/941378787241/locations/global/workloadIdentityPools/github/providers/my-repo'
 
 jobs:
   deploy:
