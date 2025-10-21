@@ -48,11 +48,12 @@ on:
         description: 'Deployment environment (staging or prod)'
         required: true
         default: 'staging'
-#env:
-#  PROJECT_ID: 'flightiq-475420'
-#  REGION: 'us-east4'
-#  SERVICE: 'my-service'
-#  WORKLOAD_IDENTITY_PROVIDER: 'projects/941378787241/locations/global/workloadIdentityPools/github/providers/my-repo'
+env:
+  PROJECT_ID: 'flightiq-475420'
+  REGION: 'us-east4'
+  SERVICE: 'my-service'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/941378787241/locations/global/workloadIdentityPools/github/providers/my-repo'
+  SERVICE_ACCOUNT: 'github-deployer@flightiq-475420.iam.gserviceaccount.com'
 
 jobs:
   deploy:
