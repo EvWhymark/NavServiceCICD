@@ -98,6 +98,10 @@ jobs:
           password: '${{ steps.auth.outputs.auth_token }}'
           registry: '${{ env.REGION }}-docker.pkg.dev'
 
+      - name: 'Configure Docker auth for artifact registry'
+        run: 'gcloud auth configure-docker us-east4-docker.pkg.dev'
+
+
       - name: 'Build and Push Container'
         run: |-
           DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
