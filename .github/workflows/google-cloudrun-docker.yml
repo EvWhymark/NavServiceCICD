@@ -100,11 +100,12 @@ jobs:
           registry: '${{ env.REGION }}-docker.pkg.dev'
 
     
-#      - name: Test GCP auth
-#        run: |
-#          gcloud auth list
-#          gcloud auth print-access-token
-#          gcloud projects get-iam-policy ${{ env.PROJECT_ID }}
+      - name: Test GCP auth
+        run: |
+          echo "Testing auth for ${{ env.SERVICE_ACCOUNT }}"
+          gcloud auth print-identity-token
+          gcloud auth print-access-token --impersonate-service-account=${{ env.SERVICE_ACCOUNT }}
+
 
       - name: 'Build and Push Container'
         run: |-
