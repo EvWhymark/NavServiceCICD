@@ -100,11 +100,18 @@ jobs:
           registry: '${{ env.REGION }}-docker.pkg.dev'
 
     
+
       - name: Test GCP auth
         run: |
-          echo "Testing auth for ${{ env.SERVICE_ACCOUNT }}"
-          gcloud auth print-identity-token
-          gcloud auth print-access-token --impersonate-service-account=${{ env.SERVICE_ACCOUNT }}
+          echo "🔍 Verifying Google Cloud authentication..."
+          gcloud auth list
+          echo "✅ Successfully authenticated as:"
+          gcloud config list account
+          echo "🔑 Checking token impersonation..."
+          gcloud auth print-access-token --impersonate-service-account=${{ env.SERVICE_ACCOUNT }} --quiet | head -c 20 && echo "..."
+          echo "📦 Verifying access to project resources..."
+          gcloud projects describe ${{ env.PROJECT_ID }} --format="value(projectId)"
+
 
 
       - name: 'Build and Push Container'
