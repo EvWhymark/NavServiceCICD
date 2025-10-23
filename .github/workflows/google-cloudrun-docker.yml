@@ -88,6 +88,11 @@ jobs:
           project_id: '${{ env.PROJECT_ID }}'
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
 
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker us-east4-docker.pkg.dev
+
       # BEGIN - Docker auth and build
       #
       # If you already have a container image, you can omit these steps.
