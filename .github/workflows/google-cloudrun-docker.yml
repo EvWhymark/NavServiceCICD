@@ -87,7 +87,6 @@ jobs:
         with:
           project_id: '${{ env.PROJECT_ID }}'
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '${{ env.SERVICE_ACCOUNT }}'
 
       # BEGIN - Docker auth and build
       #
@@ -98,20 +97,6 @@ jobs:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.auth_token }}'
           registry: '${{ env.REGION }}-docker.pkg.dev'
-
-    
-
-      - name: Test GCP auth
-        run: |
-          echo "🔍 Verifying Google Cloud authentication..."
-          gcloud auth list
-          echo "✅ Successfully authenticated as:"
-          gcloud config list account
-          echo "🔑 Checking token impersonation..."
-          gcloud auth print-access-token --impersonate-service-account=${{ env.SERVICE_ACCOUNT }} --quiet | head -c 20 && echo "..."
-          echo "📦 Verifying access to project resources..."
-          gcloud projects describe ${{ env.PROJECT_ID }} --format="value(projectId)"
-
 
 
       - name: 'Build and Push Container'
