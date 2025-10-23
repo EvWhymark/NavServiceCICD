@@ -90,11 +90,6 @@ jobs:
           service_account: ${{ env.SERVICE_ACCOUNT }}
 
 
-
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker us-east4-docker.pkg.dev
-
       # BEGIN - Docker auth and build
       #
       # If you already have a container image, you can omit these steps.
@@ -121,7 +116,7 @@ jobs:
           region: '${{ env.REGION }}'
           # NOTE: If using a pre-built image, update the image name below:
 
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}'
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/navigation:${{ github.sha }}
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |2-
