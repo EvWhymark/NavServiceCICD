@@ -40,7 +40,7 @@ name: 'Build and Deploy to Cloud Run'
 on:
   push:
     branches:
-      - '"main"'
+      - '"integration"'
   #For Testing
   workflow_dispatch:
     inputs:
@@ -52,12 +52,13 @@ env:
   PROJECT_ID: 'flightiq-475420'
   REGION: 'us-east4'
   SERVICE: 'my-service'
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/941378787241/locations/global/workloadIdentityPools/github/providers/my-repo'
-  SERVICE_ACCOUNT: 'github-deployer@flightiq-475420.iam.gserviceaccount.com'
+
 
 jobs:
   deploy:
     runs-on: 'ubuntu-latest'
+    environment: 'Google Cloud Environment'
+
 
     permissions:
       contents: 'read'
@@ -86,8 +87,8 @@ jobs:
         uses: 'google-github-actions/auth@v3' # google-github-actions/auth@v2
         with:
           project_id: ${{ env.PROJECT_ID }}
-          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
 
 
