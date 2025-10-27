@@ -40,7 +40,7 @@ name: 'Build and Deploy to Cloud Run'
 on:
   push:
     branches:
-      - '"integration"'
+      - integration
   #For Testing
   workflow_dispatch:
     inputs:
