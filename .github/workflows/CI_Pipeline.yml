@@ -98,7 +98,7 @@ jobs:
         working-directory: ./Navigation
         run: |
           IMAGE_TAG="nav_svc:${{ github.sha }}"
-          docker build --tag $IMAGE_TAG ./Navigation
+          docker build --tag $IMAGE_TAG
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Run Trivy vulnerability scanner
