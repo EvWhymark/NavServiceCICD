@@ -79,8 +79,12 @@ jobs:
         working-directory: ./Navigation
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=EvWhymark_NavServiceCICD
+        run: |
+          mvn -B verify \
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=EvWhymark_NavServiceCICD \
+          -Dsonar.organization=evwhymark \
+          -Dsonar.host.url=https://sonarcloud.io
 
   trivy_scan:
     name: Build and Scan with Trivy
