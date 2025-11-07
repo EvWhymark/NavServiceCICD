@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - integration
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
@@ -13,11 +14,6 @@ permissions:
   contents: read
   security-events: write
 
-env:
-  PROJECT_ID: 'peppy-ward-447115-i5'
-  REGION: 'us-central1'
-  REPO: 'gcr.io'
-  IMAGE: 'nav_svc'
 
 jobs:
   build_and_scan:
@@ -49,6 +45,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      #Modify with correct SonarQube info
       - name: Build and analyze with SonarQube
         working-directory: ./Navigation
         env:
