@@ -46,14 +46,14 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       #Modify with correct SonarQube info
-      #Added a bunch of logic to handle PRs not into main. 
+      #Added a bunch of logic to handle PRs not into main.
       - name: Build and analyze with SonarQube
         working-directory: ./Navigation
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           echo "Running Sonar analysis for branch: ${{ github.head_ref || github.ref_name }}"
-          
+
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "main" ]]; then
             echo "Detected PR into main → running PR analysis"
             mvn -B clean verify \
@@ -64,7 +64,6 @@ jobs:
               -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
               -Dsonar.pullrequest.branch=${{ github.head_ref }} \
               -Dsonar.pullrequest.base=${{ github.base_ref }}
-          
           else
             echo "Running branch analysis (either push or PR into integration)"
             mvn -B clean verify \
@@ -74,6 +73,8 @@ jobs:
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} \
               -Dsonar.branch.target=${{ github.base_ref || 'main' }}
+          fi
+
 
       - name: Build Docker image
         working-directory: ./Navigation
