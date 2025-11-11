@@ -38,7 +38,6 @@ on:
     types:
       - completed
     branches:
-      - integration
       - main
   #Only for testing
   workflow_dispatch:
@@ -62,7 +61,9 @@ jobs:
     #Will not deploy if CI does not succeed.
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: 'ubuntu-latest'
-    environment: 'Google Cloud Environment'
+    environment:
+      name: 'Google Cloud Environment'
+      url: ${{ steps.deploy.outputs.url }}
 
 
     permissions:
@@ -117,17 +118,19 @@ jobs:
           DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/navigation:${{ github.sha }}"
           docker build --tag ${DOCKER_TAG} ./Navigation
           docker push ${DOCKER_TAG}
+          
+
       - name: 'Deploy to Cloud Run'
-
-        # END - Docker auth and build
-
         uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17' # google-github-actions/deploy-cloudrun@v2
         with:
           service: '${{ env.SERVICE }}'
           region: '${{ env.REGION }}'
           # NOTE: If using a pre-built image, update the image name below:
-
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/navigation:${{ github.sha }}
+          env_vars: |
+            ENVIRONMENT_URL=https://${{ env.SERVICE }}-${{ env.REGION }}.a.run.app
+            
+
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |2-
