@@ -32,24 +32,15 @@
 
 name: 'Build and Deploy to Cloud Run'
 
+#Wait for CI to finish
 on:
-  push:
-    branches:
-      - integration
+  workflow_run:
+    workflows: ["Continuous Integration"]   # <-- name of your CI workflow
+    types:
+      - completed
   #For Testing
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment (staging or prod)'
-        required: true
-        default: 'staging'
 
-#Wait for CI to finish
-#on:
-#  workflow_run:
-#    workflows: ["Continuous Integration"]   # <-- name of your CI workflow
-#    types:
-#      - completed
 
 
 
@@ -62,7 +53,7 @@ env:
 jobs:
   deploy:
     #Will not deploy if CI does not succeed.
-    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: 'ubuntu-latest'
     environment: 'Google Cloud Environment'
 
@@ -75,11 +66,11 @@ jobs:
       - name: 'Checkout'
         uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
 
-      - name: 'Set up Java (JDK 17)'
+      - name: 'Set up Java (JDK 21)'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: 'Build with Maven'
         run: mvn clean package -DskipTests
