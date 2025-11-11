@@ -42,7 +42,7 @@ on:
       - main
   #Only for testing
   workflow_dispatch:
-    
+
 
 #Wait for CI to finish
 #on:
@@ -60,7 +60,7 @@ env:
 jobs:
   deploy:
     #Will not deploy if CI does not succeed.
-    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: 'ubuntu-latest'
     environment: 'Google Cloud Environment'
 
