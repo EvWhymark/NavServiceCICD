@@ -33,16 +33,16 @@
 name: 'Build and Deploy to Cloud Run'
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
     branches:
       - integration
-  #For Testing
+      - main
+  #Only for testing
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment (staging or prod)'
-        required: true
-        default: 'staging'
+    
 
 #Wait for CI to finish
 #on:
@@ -50,8 +50,6 @@ on:
 #    workflows: ["Continuous Integration"]   # <-- name of your CI workflow
 #    types:
 #      - completed
-
-
 
 env:
   PROJECT_ID: 'flightiq-475420'
