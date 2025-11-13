@@ -40,7 +40,8 @@ on:
       - completed
     branches:
       - main
-  #Only for testing
+      - integration
+  #For Testing
   workflow_dispatch:
 
 
@@ -54,7 +55,10 @@ env:
 jobs:
   deploy:
     #Will not deploy if CI does not succeed.
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: >
+      ${{ github.event.workflow_run.conclusion == 'success' &&
+          (github.event.workflow_run.head_branch == 'main' ||
+           github.event.workflow_run.head_branch == 'integration') }}
     runs-on: 'ubuntu-latest'
     environment:
       name: 'Google Cloud Environment'
