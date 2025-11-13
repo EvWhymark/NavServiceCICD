@@ -45,6 +45,13 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      #We need to gurantee that it builds
+      #This feels wrong
+      - name: Build JAR
+        working-directory: ./Navigation
+        run: mvn -B clean verify
+
+
       #Modify with correct SonarQube info
       - name: Build and analyze with SonarQube
         if: env.SONAR_TOKEN != '' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/integration')
@@ -54,7 +61,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B clean verify \
+          mvn -B verify \
           org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=EvWhymark_NavServiceCICD \
           -Dsonar.organization=evwhymark \
