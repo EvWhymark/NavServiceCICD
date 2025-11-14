@@ -45,8 +45,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      #We need to gurantee that it builds
-      #This feels wrong
+      #We need to guarantee that it builds
       - name: Build JAR
         working-directory: ./Navigation
         run: mvn -B clean verify
@@ -66,7 +65,6 @@ jobs:
           -Dsonar.projectKey=EvWhymark_NavServiceCICD \
           -Dsonar.organization=evwhymark \
           -Dsonar.host.url=https://sonarcloud.io 
-          -Dsonar.branch.name=${{ github.ref_name }}
 
 
       - name: Build Docker image
